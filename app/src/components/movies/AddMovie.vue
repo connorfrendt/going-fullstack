@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import api from '../../services/api';
 
 function initMovie() {
   return {
@@ -43,6 +44,12 @@ export default {
     return {
       movie: initMovie(),
     };
+  },
+  created() {
+    api.getGenres()
+      .then(genres => {
+        this.genres = genres;
+      });
   },
   methods: {
     handleSubmit() {

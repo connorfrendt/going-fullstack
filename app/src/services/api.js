@@ -19,5 +19,10 @@ export default {
       body: JSON.stringify(movie)
     })
       .then(response => response.json());
+  },
+
+  getGenres() {
+    return fetch('/api/genres')
+      .then(response => response.json());
   }
 };
