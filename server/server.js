@@ -1,20 +1,34 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
-const pg = require('pg');
+const client = require('./db-client');
 
 app.use(morgan('dev'));
 
 app.use(express.json());
 
-const Client = pg.Client;
-const dbUrl = 'postgres://localhost:5432/films';
-const client = new Client(dbUrl);
-client.connect();
+app.get('/api/genres', (req, res) => {
+  client.query(`
+    SELECT id, name, short_name as "shortName"
+    FROM genre
+    ORDER BY name;
+  `)
+    .then(result => {
+      res.json(result.rows);
+    });
+});
 
 app.get('/api/movies', (req, res) => {
   client.query(`
-    SELECT id, name FROM movies;
+    SELECT
+      movies.id,
+      movies.name as name,
+      year as "year",
+      genre.id as "genreId",
+      genre.name as genre
+    FROM movies
+    JOIN genre
+    ON movies.genre_id = genre.id;
   `)
     .then(result => {
       res.json(result.rows);
@@ -35,11 +49,28 @@ app.post('/api/movies', (req, res) => {
   const body = req.body;
 
   client.query(`
-    INSERT INTO movies (name, year, rating)
+    INSERT INTO movies (name, genre_id, year)
     VALUES($1, $2, $3)
-    RETURNING id, name, year, rating;
+    RETURNING id;
   `,
-  [body.name, body.year, body.rating])
+  [body.name, body.genreId, body.year])
+    .then(result => {
+      const id = result.rows[0].id;
+
+      return client.query(`
+        SELECT
+          movies.id,
+          movies.name as name,
+          year as "year",
+          genre.id as "genreId",
+          genre.name as genre
+        FROM movies
+        JOIN genre
+        ON movies.genre_id = genre.id
+        WHERE movies.id = $1;
+      `,
+      [id]);
+    })
     .then(result => {
       res.json(result.rows[0]);
     });

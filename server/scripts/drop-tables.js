@@ -1,7 +1,4 @@
-const pg = require('pg');
-const Client = pg.Client;
-const databaseUrl = 'postgres://localhost:5432/films';
-const client = new Client(databaseUrl);
+const client = require('../db-client');
 
 client.connect()
   .then(() => {

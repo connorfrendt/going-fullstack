@@ -1,18 +1,29 @@
-const pg = require('pg');
-const Client = pg.Client;
-const databaseUrl = 'postgres://localhost:5432/films';
+const client = require('../db-client');
 const movies = require('./movies.json');
-const client = new Client(databaseUrl);
+const genres = require('./genres');
 
-client.connect()
+Promise.all(
+  genres.map(genre => {
+    return client.query(`
+      INSERT INTO genre (name, short_name)
+      VALUES ($1, $2);
+    `,
+    [genre.name, genre.shortName]);
+  })
+)
   .then(() => {
     return Promise.all(
-      movies.map(movie => {
+      movies.map(movies => {
         return client.query(`
-          INSERT INTO movies (name, year, rating)
-          VALUES ($1, $2, $3);
+          INSERT INTO movie (name, genre_id, rating)
+          SELECT
+            $1 as name,
+            id as genre_id,
+            $2 as rating
+          FROM genre
+          WHERE short_name = $3;
         `,
-        [movie.name, movie.year, movie.rating]);
+        [movies.name, movies.rating, movies.genre]);
       })
     );
   })
