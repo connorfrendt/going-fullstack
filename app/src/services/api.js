@@ -10,13 +10,13 @@ export default {
       .then(response => response.json());
   },
 
-  addMovie(movie) {
+  addMovie(movies) {
     return fetch('/api/movies', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(movie)
+      body: JSON.stringify(movies)
     })
       .then(response => response.json());
   },

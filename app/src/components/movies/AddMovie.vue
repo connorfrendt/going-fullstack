@@ -33,6 +33,7 @@ function initMovie() {
   return {
     name: '',
     year: '',
+    
   };
 }
 
@@ -53,9 +54,9 @@ export default {
   },
   methods: {
     handleSubmit() {
-      this.onAdd(this.movie)
+      this.onAdd(this.movies)
         .then(() => {
-          this.movie = initMovie();
+          this.movies = initMovie();
         });
     }
   }
