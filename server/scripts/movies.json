@@ -2,16 +2,19 @@
   {
     "name": "Incredibles",
     "year": 2004,
-    "rating": true
+    "rating": true,
+    "genre": "action"
   },
   {
     "name": "Robot Monster",
     "year": 1953,
-    "rating": false
+    "rating": false,
+    "genre": "sci_fi"
   },
   {
     "name": "Inception",
     "year": 2010,
-    "rating": true
+    "rating": true,
+    "genre": "sci_fi"
   }
 ]

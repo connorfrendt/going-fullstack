@@ -5,7 +5,7 @@ const genres = require('./genres');
 Promise.all(
   genres.map(genre => {
     return client.query(`
-      INSERT INTO genre (name, short_name)
+      INSERT INTO genres (name, short_name)
       VALUES ($1, $2);
     `,
     [genre.name, genre.shortName]);
@@ -13,17 +13,18 @@ Promise.all(
 )
   .then(() => {
     return Promise.all(
-      movies.map(movies => {
+      movies.map(movie => {
         return client.query(`
-          INSERT INTO movie (name, genre_id, rating)
+          INSERT INTO movies (name, genre_id, rating, year)
           SELECT
             $1 as name,
             id as genre_id,
-            $2 as rating
-          FROM genre
+            $2 as rating,
+            $4 as year
+          FROM genres
           WHERE short_name = $3;
         `,
-        [movies.name, movies.rating, movies.genre]);
+        [movie.name, movie.rating, movie.genre, movie.year]);
       })
     );
   })

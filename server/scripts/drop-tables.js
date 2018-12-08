@@ -1,11 +1,9 @@
 const client = require('../db-client');
 
-client.connect()
-  .then(() => {
-    return client.query(`
-      DROP TABLE IF EXISTS movies;
-    `);
-  })
+client.query(`
+    DROP TABLE IF EXISTS movies;
+    DROP TABLE IF EXISTS genres;
+`)
   .then(
     () => console.log('drop tables complete'),
     err => console.log(err)

@@ -10,7 +10,7 @@ app.use(express.json());
 app.get('/api/genres', (req, res) => {
   client.query(`
     SELECT id, name, short_name as "shortName"
-    FROM genre
+    FROM genres
     ORDER BY name;
   `)
     .then(result => {
@@ -24,11 +24,13 @@ app.get('/api/movies', (req, res) => {
       movies.id,
       movies.name as name,
       year as "year",
-      genre.id as "genreId",
-      genre.name as genre
+      rating as "rating",
+      genres.id as "genreId",
+      genres.name as genre
     FROM movies
-    JOIN genre
-    ON movies.genre_id = genre.id;
+    JOIN genres
+    ON movies.genre_id = genres.id
+    ORDER BY year DESC, name ASC;
   `)
     .then(result => {
       res.json(result.rows);
@@ -49,11 +51,11 @@ app.post('/api/movies', (req, res) => {
   const body = req.body;
 
   client.query(`
-    INSERT INTO movies (name, genre_id, year)
-    VALUES($1, $2, $3)
+    INSERT INTO movies (name, genre_id)
+    VALUES($1, $2)
     RETURNING id;
   `,
-  [body.name, body.genreId, body.year])
+  [body.name, body.genreId])
     .then(result => {
       const id = result.rows[0].id;
 
@@ -62,11 +64,11 @@ app.post('/api/movies', (req, res) => {
           movies.id,
           movies.name as name,
           year as "year",
-          genre.id as "genreId",
-          genre.name as genre
+          genres.id as "genreId",
+          genres.name as genre
         FROM movies
-        JOIN genre
-        ON movies.genre_id = genre.id
+        JOIN genres
+        ON movies.genre_id = genres.id
         WHERE movies.id = $1;
       `,
       [id]);
