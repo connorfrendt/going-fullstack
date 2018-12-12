@@ -4,6 +4,9 @@
     <p>
       Year Released: {{movie.year}}
     </p>
+    <p>
+      Genre: {{movie.genre_id}}
+    </p>
   </section>
 </template>
 
