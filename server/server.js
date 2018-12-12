@@ -29,7 +29,7 @@ app.get('/api/movies', (req, res) => {
       genres.name as genre
     FROM movies
     JOIN genres
-    ON movies.genre_id = genres.id
+      ON movies.genre_id = genres.id
     ORDER BY year DESC, name ASC;
   `)
     .then(result => {
