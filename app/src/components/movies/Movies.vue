@@ -19,8 +19,8 @@ export default {
     };
   },
   components: {
-    MovieList,
-    AddMovie
+    AddMovie,
+    MovieList
   },
   created() {
     api.getMovies()
@@ -33,9 +33,10 @@ export default {
   },
   methods: {
     handleAdd(movie) {
-      console.log('added!');
+      console.log('added!', movie);
       return api.addMovie(movie)
         .then(saved => {
+          console.log('this is saved', saved);
           this.movies.push(saved);
         });
     }

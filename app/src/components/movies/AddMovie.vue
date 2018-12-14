@@ -22,6 +22,20 @@
         v-model="movie.rating" required>
     </p>
     <br />
+
+    <p>
+      <label>Genre:</label>
+      <select v-if="genres"
+        v-model="movie.genreId" required>
+        <option value="-1" disabled>Select a Genre</option>
+        <option v-for="genre in genres"
+          :key="genre.id"
+          :value="genre.id">
+        {{genre.name}} {{genre.shortName}}
+        </option>
+      </select>
+    </p>
+
     <button>Add</button>
   </form>
 </template>
@@ -33,7 +47,7 @@ function initMovie() {
   return {
     name: '',
     year: '',
-    
+    genreId: -1
   };
 }
 
@@ -44,19 +58,21 @@ export default {
   data() {
     return {
       movie: initMovie(),
+      genres: null
     };
   },
   created() {
     api.getGenres()
       .then(genres => {
+        console.log('this is genres', genres);
         this.genres = genres;
       });
   },
   methods: {
     handleSubmit() {
-      this.onAdd(this.movies)
+      this.onAdd(this.movie)
         .then(() => {
-          this.movies = initMovie();
+          this.movie = initMovie();
         });
     }
   }
