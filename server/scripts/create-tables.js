@@ -1,6 +1,12 @@
 const client = require('../db-client');
 
 client.query(`
+  CREATE TABLE IF NOT EXISTS genres (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(256) NOT NULL,
+    short_name VARCHAR(50) NOT NULL
+  );
+
   CREATE TABLE IF NOT EXISTS movies (
     id SERIAL PRIMARY KEY,
     name VARCHAR(256) NOT NULL,
@@ -8,13 +14,6 @@ client.query(`
     rating BOOLEAN,
     genre_id INTEGER NOT NULL REFERENCES genres(id)
   );
-  
-  CREATE TABLE IF NOT EXISTS genres (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(256) NOT NULL,
-    short_name VARCHAR(50) NOT NULL
-  );
-
 
 `)
   .then(
