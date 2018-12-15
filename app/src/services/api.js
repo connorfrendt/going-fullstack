@@ -21,6 +21,16 @@ export default {
       .then(response => response.json());
   },
 
+  removeMovie(id) {
+    return fetch(`/api/movies/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.json());
+  },
+
   getGenres() {
     return fetch('/api/genres')
       .then(response => response.json());

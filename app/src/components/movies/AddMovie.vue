@@ -64,7 +64,6 @@ export default {
   created() {
     api.getGenres()
       .then(genres => {
-        console.log('this is genres', genres);
         this.genres = genres;
       });
   },
